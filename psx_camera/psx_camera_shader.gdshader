@@ -44,8 +44,15 @@ float dither(vec2 position, float brightness) {
     return brightness < threshold ? 0.0 : 1.0;
 }
 
+// Error encountered using Godot 4.3-mono
+// Line 48 (MAGIC_POSITION_WRITE):
+// You are attempting to assign the VERTEX position in model space to the vertex POSITION in clip space.
+// The definition of clip space changed in version 4.3, so if this code was written prior to 4.3, it will not continue to work.
+// Consider specifying the clip space z-component directly i.e. use `vec4(VERTEX.xy, 1.0, 1.0)`.
+//
+// It works now with that simple trick!
 void vertex() {
-  POSITION = vec4(VERTEX, 1.0);
+  POSITION = vec4(VERTEX.xy, 1.0, 1.0);
 }
 
 void fragment(){
